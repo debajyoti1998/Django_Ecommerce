@@ -3,6 +3,24 @@
 {% block title %}Cart{% endblock title %}
 {% block main-content %}
 <div class="container my-5">
+
+  <div class="modal" id="exampleModal" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Error</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p>Due to some server error , we can not process your request.</p>
+          <p>Please try after some time</p>
+        </div>
+        
+      </div>
+    </div>
+  </div>
+
+
  <div class="row">
   <h1 class="text-center mb-5">Shopping Cart</h1>
   <div class="col-sm-8">
@@ -19,12 +37,12 @@
        <p class="mb-2 text-muted small">{{cart.Product.description}}</p>
        <div class="my-3">
         <label for="quantity">Quantity:</label>
-        <a class="minus-cart btn"><i class="fas fa-minus-square fa-lg"></i></a>
-          <span id="quantity">{{cart.quality}}</span>
+        <a class="minus-cart btn" pid="{{cart.Product.id}}"><i class="fas fa-minus-square fa-lg"></i></a>
+          <span id="quantity_{{cart.Product.id}}">{{cart.quality}}</span>
         <a class="plus-cart btn" pid="{{cart.Product.id}}"><i class="fas fa-plus-square fa-lg"></i></a>
        </div> 
        <div class="d-flex justify-content-between">
-        <a href="#" class="btn btn-sm btn-secondary mr-3 remove-cart" pid="{{cart.Product.id}}" >Remove item </a>
+        <a  class="btn btn-sm btn-secondary mr-3 remove-cart" pid="{{cart.Product.id}}" >Remove item </a>
         <p class="mb-0"><span><strong>{{cart.Product.discount_price}}</strong></span></p>
        </div>
       </div>

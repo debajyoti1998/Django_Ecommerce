@@ -34,11 +34,12 @@ def product_detail(request,pk):
 #     def get(self,request,pk):
 
         product=Product.objects.get(pk=pk)
-        # item_already_in_cart=False
-        # item_already_in_cart=Cart.objects.filter(Q(Product=Product.product_id) & Q(user=request.user))
+        item_already_in_cart=False
+        item_already_in_cart=Cart.objects.filter(Q(Product=product) & Q(user=request.user))
+        print(item_already_in_cart)
 
 
-        return render(request, 'app/productdetail.html',{'product':product})
+        return render(request, 'app/productdetail.html',{'product':product ,'item_already_in_cart':item_already_in_cart})
 
 def add_to_cart(request):
     if request.user.is_authenticated == False :
@@ -263,26 +264,46 @@ def orders(request):
     return render(request, 'app/orders.html',{'op':op})
 
 ##-----------------
-def plus_cart(request):
+def plus_cart(request,pk):
     if request.method=='GET':
-        prod_id=request.GET['prod_id']
-        c=Cart.objects.get(Q(Product=id) & Q(User=request.user))
+
+        # prod_id=request.GET['prod_id']
+        product=Product.objects.get(pk=pk)
+        user=request.user
+        print(product)
+        print(user)
+        c=Cart.objects.get( Q(Product=product) & Q(user=user) )
+        # if c.quality >= 1:
         c.quality+=1
         c.save()
-        amount =0.0
-        shipping_amount=70.0
-        cart_product=[p for p in Cart.objects.all() if p.user==request.user]
-        for p in cart_product:
-            Pamount=(p.quality * p.Product.discount_price)
-            amount= amount + Pamount
-            totalAmount= amount+shipping_amount
-            data={
-                'quantity':c.quantity,
-                'amount':amount,
-                'totalAmount':totalAmount
-            }
-        return JsonResponse(data)
+        
+        return JsonResponse({'product_price': product.discount_price})
 
+def minus_cart(request,pk):
+    if request.method=='GET':
+
+        # prod_id=request.GET['prod_id']
+        product=Product.objects.get(pk=pk)
+        user=request.user
+        print(product)
+        print(user)
+        c=Cart.objects.get( Q(Product=product) & Q(user=user) )
+        if c.quality >=1:
+            c.quality-=1
+            c.save()
+        
+        return JsonResponse({'product_price': product.discount_price})
+
+def remove_cart(request,pk):
+    if request.method=='GET':
+        product=Product.objects.get(pk=pk)
+        user=request.user
+        print(product)
+        print(user)
+        c=Cart.objects.get( Q(Product=product) & Q(user=user) )
+       
+        c.delete()
+        return JsonResponse({'product_price': product.discount_price})
 
 
     
